@@ -216,6 +216,17 @@ python -m scripts.match_evidence_to_chunks `
 
 ## Retrieval
 
+Before running retrieval, create the query embeddings for both embedding models. The latency of creating the query embeddings is later ysed in the efficiency analysis. 
+
+```powershell
+python -m scripts.create_query_embeddings `
+  --queries ".\final results\ESRS queries\ESRS_queries.jsonl" `
+  --model-name "microsoft/harrier-oss-v1-0.6b" `
+  --output ".\final results\embeddings\ESRS_queries_harrier_oss_v1_0_6b.npy" `
+  --timing-output ".\final results\Efficiency\ESRS\ESRS_harrier_query_embedding_timings.csv" `
+  --normalize
+```
+
 ### 6. BM25
 
 BM25 provides the lexical retrieval baseline and retrieves directly from the complete chunk corpus.
@@ -289,6 +300,7 @@ python -m scripts.evaluate_hybrid_pageindex `
   --setup-csv ".\final results\ESRS retrieval\hybrid_pageindex_setup_runs.csv" `
   --node-cache-path ".\final results\embeddings\ESRS_hybrid_nodes_harrier_oss_v1_0_6b.npy" `
   --top-node-cache-path ".\final results\embeddings\ESRS_hybrid_top_nodes_harrier_oss_v1_0_6b.npy" `
+  --query-cache-path ".\final results\embeddings\ESRS_queries_harrier_oss_v1_0_6b.npy" `
   --top-k 5 `
   --top-m 10
 ```
@@ -328,6 +340,7 @@ python -m scripts.evaluate_hybrid_pageindex_chunk_rerank `
   --node-cache-path ".\final results\embeddings\ESRS_hybrid_nodes_harrier_oss_v1_0_6b.npy" `
   --top-node-cache-path ".\final results\embeddings\ESRS_hybrid_top_nodes_harrier_oss_v1_0_6b.npy" `
   --chunk-cache-path ".\final results\embeddings\ESRS_hybrid_chunks_harrier_oss_v1_0_6b.npy" `
+  --query-cache-path ".\final results\embeddings\ESRS_queries_harrier_oss_v1_0_6b.npy" `
   --top-k 5 `
   --top-m 10
 ```
@@ -374,6 +387,10 @@ python -m scripts.summarize_preprocessing_efficiency `
   --structure-runs ".\final results\ESRS_pageindex_structure_runs.csv" `
   --chunk-runs ".\final results\ESRS_chunk_runs.csv" `
   --output-dir ".\final results\efficiency"
+```
+
+```powershell
+python -m scripts.analyse_efficiency
 ```
 
 Change the dataset and corresponding input files to evaluate FinanceBench.
