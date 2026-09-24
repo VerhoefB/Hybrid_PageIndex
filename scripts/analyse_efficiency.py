@@ -916,6 +916,60 @@ def make_tradeoff_plot(summary, dataset, output_path):
     plt.close(fig)
 
 
+def make_accuracy_tradeoff_plot(summary, dataset, output_path):
+    df = summary[
+        summary["dataset"] == dataset
+    ].copy()
+
+    fig, ax = plt.subplots(figsize=(8, 5.5))
+
+    for _, row in df.iterrows():
+
+        x = row["mean_query_latency_seconds"]
+        y = row["accuracy_at_1"]
+
+        ax.scatter(
+            x,
+            y,
+            s=70,
+        )
+
+        ax.annotate(
+            method_label(row),
+            (x, y),
+            xytext=(5, 5),
+            textcoords="offset points",
+            fontsize=9,
+        )
+
+    # Use log scale because of the large latency differences
+    ax.set_xscale("log")
+
+    ax.set_xlabel(
+        "Mean query latency (seconds, log scale)"
+    )
+
+    ax.set_ylabel("Accuracy@1")
+
+    ax.set_title(
+        f"Effectiveness–efficiency trade-off: {dataset}"
+    )
+
+    ax.grid(
+        True,
+        alpha=0.25,
+    )
+
+    fig.tight_layout()
+    fig.savefig(
+        output_path,
+        dpi=300,
+        bbox_inches="tight",
+    )
+
+    plt.close(fig)
+
+
 # Main
 
 def main():
@@ -1072,6 +1126,13 @@ def main():
             dataset,
             OUTPUT_DIR
             / f"{dataset}_mrr_latency_tradeoff.png",
+        )
+
+        make_accuracy_tradeoff_plot(
+            main_summary,
+            dataset,
+            OUTPUT_DIR
+            / f"{dataset}_accuracy_latency_tradeoff.png",
         )
 
     print(
