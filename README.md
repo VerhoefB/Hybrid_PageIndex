@@ -216,7 +216,7 @@ python -m scripts.match_evidence_to_chunks `
 
 ## Retrieval
 
-Before running retrieval, create the query embeddings for both embedding models. The latency of creating the query embeddings is later ysed in the efficiency analysis. 
+Before running retrieval, create the query embeddings for both embedding models. The latency of creating the query embeddings is later used in the efficiency analysis. 
 
 ```powershell
 python -m scripts.create_query_embeddings `
